@@ -16,7 +16,7 @@ services:
     # expose:
     #   - "8000"
     depends_on:
-      - db
+      # - db
       - redis
     volumes:
       - ./src/app:/code/app
@@ -30,23 +30,23 @@ services:
     env_file:
       - ./src/.env
     depends_on:
-      - db
+      # - db
       - redis
     volumes:
       - ./src/app:/code/app
       - ./src/.env:/code/.env
 
-  db:
-    image: postgres:13
-    env_file:
-      - ./src/.env
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    # -------- replace with comment to run migrations with docker --------
-    expose:
-      - "5432"
-    # ports:
-    #  - 5432:5432
+  # db:
+  #   image: postgres:13
+  #   env_file:
+  #     - ./src/.env
+  #   volumes:
+  #     - postgres-data:/var/lib/postgresql/data
+  #   # -------- replace with comment to run migrations with docker --------
+  #   expose:
+  #     - "5432"
+  #   # ports:
+  #   #  - 5432:5432
 
   redis:
     image: redis:alpine
@@ -56,18 +56,18 @@ services:
       - "6379"
 
   #-------- uncomment to run with pgadmin --------
-  # pgadmin:
-  #   container_name: pgadmin4
-  #   image: dpage/pgadmin4:latest
-  #   restart: always
-  #   ports:
-  #     - "5050:80"
-  #   volumes:
-  #     - pgadmin-data:/var/lib/pgadmin
-  #   env_file:
-  #     - ./src/.env
-  #   depends_on:
-  #     - db
+  pgadmin:
+    container_name: pgadmin4
+    image: dpage/pgadmin4:latest
+    restart: always
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    env_file:
+      - ./src/.env
+    # depends_on:
+    #   - db
 
   #-------- uncomment to run with nginx --------
   # nginx:
@@ -122,6 +122,6 @@ services:
   #     - ./src:/code/src
 
 volumes:
-  postgres-data:
+  # postgres-data:
   redis-data:
-  #pgadmin-data:
+  pgadmin-data:
