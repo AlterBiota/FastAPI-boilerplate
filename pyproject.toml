@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "fastapi-boilerplate"
+name = "digital-aggregate-api"
 version = "0.1.0"
-description = "A fully Async FastAPI boilerplate using SQLAlchemy and Pydantic 2"
-authors = ["Igor Magalhaes <igor.magalhaes.r@gmail.com>"]
+description = "data api for the digtial aggregate project"
+authors = ["Vivek Patel <vivek.patel@alterbiota.com>"]
 license = "MIT"
 readme = "README.md"
 packages = [{ include = "src" }]
