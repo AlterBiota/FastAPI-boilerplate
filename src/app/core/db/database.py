@@ -14,7 +14,7 @@ class Base(DeclarativeBase, MappedAsDataclass):
 DATABASE_URI = settings.POSTGRES_URI
 DATABASE_PREFIX = settings.POSTGRES_ASYNC_PREFIX
 SSL_MODE = "?sslmode=require"
-DATABASE_URL = "postgresql+asyncpg://vpatel%40ddataportal-digitalaggregate-test:ab$12345@dataportal-digitalaggregate-test.postgres.database.azure.com/portal?ssl=require"
+DATABASE_URL = "postgresql+asyncpg://vpatel:ab$12345@dataportal-digitalaggregate-test.postgres.database.azure.com/portal?ssl=require"
 
 async_engine = create_async_engine(DATABASE_URL, echo=False, future=True)
 
