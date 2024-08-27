@@ -13,9 +13,17 @@ from app.models import models
 # access to the values within the .ini file in use.
 config = context.config
 
+DATABASE_URI = settings.POSTGRES_URI
+DATABASE_PREFIX = settings.POSTGRES_ASYNC_PREFIX
+DATABASE_URL = f"{DATABASE_PREFIX}{DATABASE_URI}?ssl=require"
+
 config.set_main_option(
-    "sqlalchemy.url",
-    "postgresql+asyncpg://vpatel:ab$12345@dataportal-digitalaggregate-test.postgres.database.azure.com/portal?ssl=require")
+    "sqlalchemy.url", DATABASE_URL)
+
+
+# config.set_main_option(
+#     "sqlalchemy.url",
+#     "postgresql+asyncpg://vpatel:ab$12345@dataportal-digitalaggregate-test.postgres.database.azure.com:5432/portal?ssl=require")
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
