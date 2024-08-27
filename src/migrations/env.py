@@ -15,8 +15,7 @@ config = context.config
 
 config.set_main_option(
     "sqlalchemy.url",
-    f"{settings.POSTGRES_ASYNC_PREFIX}{settings.POSTGRES_USER}:{settings.POSTGRES_PASSWORD}@localhost/{settings.POSTGRES_DB}",
-)
+    "postgresql+asyncpg://vpatel:ab$12345@dataportal-digitalaggregate-test.postgres.database.azure.com/portal?ssl=require")
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -33,7 +32,6 @@ target_metadata = Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
