@@ -28,12 +28,10 @@ async def get_current_user(
     if token_data is None:
         raise UnauthorizedException("User not authenticated.")
 
-    if "@" in token_data.username_or_email:
-        user: dict | None = await crud_users.get(db=db, email=token_data.username_or_email, is_deleted=False)
-    else:
-        user = await crud_users.get(db=db, username=token_data.username_or_email, is_deleted=False)
+    user: dict | None = await crud_users.get(db=db, uuid=token_data.user_uuid, is_deleted=False)
 
     if user:
+        user["role"] = "superuser" if user["is_superuser"] else "admin" if user["is_admin"] else "member"
         return user
 
     raise UnauthorizedException("User not authenticated.")
@@ -67,6 +65,12 @@ async def get_optional_user(request: Request, db: AsyncSession = Depends(async_g
 
 async def get_current_superuser(current_user: Annotated[dict, Depends(get_current_user)]) -> dict:
     if not current_user["is_superuser"]:
+        raise ForbiddenException("You do not have enough privileges.")
+
+    return current_user
+
+async def get_current_superuser_or_admin(current_user: Annotated[dict, Depends(get_current_user)]) -> dict:
+    if not current_user["is_superuser"] and not current_user["is_admin"]:
         raise ForbiddenException("You do not have enough privileges.")
 
     return current_user

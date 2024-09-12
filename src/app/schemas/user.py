@@ -1,4 +1,5 @@
 from datetime import datetime
+from enum import Enum
 from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
@@ -6,27 +7,57 @@ from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from ..core.schemas import PersistentDeletion, TimestampSchema, UUIDSchema
 
 
+class UserRole_Internal(str, Enum):
+    admin = "admin"
+    member = "member"
+    superuser = "superuser"
+
+
+class UserRole(str, Enum):
+    admin = "admin"
+    member = "member"
+
+
 class UserBase(BaseModel):
-    name: Annotated[str, Field(min_length=2, max_length=30, examples=["User Userson"])]
-    username: Annotated[str, Field(min_length=2, max_length=20, pattern=r"^[a-z0-9]+$", examples=["userson"])]
+    firstname: Annotated[str, Field(min_length=2, max_length=35, examples=["User"])]
+    lastname: Annotated[str, Field(min_length=2, max_length=35, examples=["Userson"])]
     email: Annotated[EmailStr, Field(examples=["user.userson@example.com"])]
+    phone_number: str | None
 
 
 class User(TimestampSchema, UserBase, UUIDSchema, PersistentDeletion):
-    profile_image_url: Annotated[str, Field(default="https://www.profileimageurl.com")]
     hashed_password: str
+    is_admin: bool = False
     is_superuser: bool = False
-    tier_id: int | None = None
+    client_id: int | None = None
 
 
 class UserRead(BaseModel):
     id: int
 
-    name: Annotated[str, Field(min_length=2, max_length=30, examples=["User Userson"])]
-    username: Annotated[str, Field(min_length=2, max_length=20, pattern=r"^[a-z0-9]+$", examples=["userson"])]
+    name: Annotated[str, Field(min_length=2, max_length=70, examples=["User Userson"])]
     email: Annotated[EmailStr, Field(examples=["user.userson@example.com"])]
-    profile_image_url: str
-    tier_id: int | None
+    phone_number: str | None
+    role: UserRole_Internal
+    client_id: int | None
+    client_name: str | None
+    created_at: datetime
+    updated_at: datetime | None
+    created_by: str | None
+    updated_by: str | None
+
+
+class UserRegister(UserBase):
+    model_config = ConfigDict(extra="forbid")
+
+    role: UserRole
+
+
+class UserRegisterInternal(UserBase):
+    created_by_user_id: int | None
+    client_id: int | None
+    is_admin: bool = False
+    is_superuser: bool = False
 
 
 class UserCreate(UserBase):
@@ -37,6 +68,10 @@ class UserCreate(UserBase):
 
 class UserCreateInternal(UserBase):
     hashed_password: str
+    created_by_user_id: int | None
+    client_id: int | None
+    is_admin: bool = False
+    is_superuser: bool = False
 
 
 class UserUpdate(BaseModel):

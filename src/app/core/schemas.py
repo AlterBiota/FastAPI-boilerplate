@@ -19,6 +19,8 @@ class UUIDSchema(BaseModel):
 class TimestampSchema(BaseModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now(UTC).replace(tzinfo=None))
     updated_at: datetime = Field(default=None)
+    created_by_user_id: int | None = Field(default=None)
+    updated_by_user_id: int | None = Field(default=None)
 
     @field_serializer("created_at")
     def serialize_dt(self, created_at: datetime | None, _info: Any) -> str | None:
@@ -54,7 +56,7 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
-    username_or_email: str
+    user_uuid: uuid_pkg.UUID
 
 
 class TokenBlacklistBase(BaseModel):
